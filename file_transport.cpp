@@ -12,8 +12,6 @@ using com::apama::epl::data_t;
 using com::apama::epl::list_t;
 using com::apama::epl::get;
 
-// make a macro for toggling between std::filesystem::path and std::string, use typdef on strings which are paths
-
 class FileTransport : public EPLPlugin<FileTransport>
 {
 public:
@@ -27,6 +25,10 @@ public:
 		md.registerMethod<decltype(&FileTransport::get_default_root_dir), &FileTransport::get_default_root_dir>("get_default_root_dir", "action<> returns string");
 		md.registerMethod<decltype(&FileTransport::read), &FileTransport::read>("read", "action<string> returns sequence<string>");
 		md.registerMethod<decltype(&FileTransport::write), &FileTransport::write>("write", "action<string, sequence<string>");
+		md.registerMethod<decltype(&FileTransport::exists), &FileTransport::exists>("exists", "action<string> returns bool");
+		md.registerMethod<decltype(&FileTransport::copy), &FileTransport::copy>("copy", "action<string, string>");
+		md.registerMethod<decltype(&FileTransport::move), &FileTransport::move>("move", "action<string, string>");
+		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string, string>");
 	}
 
 	std::string get_default_root_dir() { return default_root_dir; }
