@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <cstdio>
+#include <iostream>
+#include <sys/stat.h>
 
 #include <epl_plugin.hpp>
 
@@ -11,6 +14,10 @@ using com::apama::epl::EPLPlugin;
 using com::apama::epl::data_t;
 using com::apama::epl::list_t;
 using com::apama::epl::get;
+
+using std::ifstream;
+using std::ofstream;
+using std::string;
 
 class FileTransport : public EPLPlugin<FileTransport>
 {
@@ -31,21 +38,21 @@ public:
 		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string, string>");
 	}
 
-	std::string get_default_root_dir() { return default_root_dir; }
+	string get_default_root_dir() { return default_root_dir; }
 
-	list_t read(const std::string &path)
+	list_t read(const string &path)
 	{
 		list_t contents;
-		std::ifstream ifs;
+		ifstream ifs;
 		ifs.open(build_path(path));
-		for(std::string line; std::getline(ifs, line);)
+		for(string line; std::getline(ifs, line);)
 		{
 			contents.push_back(line);
 		}
 		return contents;
 	}
 
-	void write(const std::string &path, const list_t &contents)
+	void write(const string &path, const list_t &contents)
 	{
 		std::ofstream ofs;
 		ofs.open(build_path(path));
@@ -55,33 +62,39 @@ public:
 		}
 	}
 
-	bool exists(const std::string &path)
+	bool exists(const string &path)
 	{
-		return false;
+		struct stat buffer;
+		return (stat (path.c_str(), &buffer) == 0);
 	}
 
-	void copy(const std::string &path, const std::string &target)
+	void copy(const string &path, const string &target)
 	{
-
+		ifstream source(path, std::ios::binary);
+		ofstream dest(target, std::ios::binary);
+		dest << source.rdbuf();
+		source.close();
+		dest.close();
 	}
 
-	void move(const std::string &path, const std::string target)
+	void move(const string &path, const string target)
 	{
-
+		copy(path, target);
+		remove(path);
 	}
 
-	void remove(const std::string &path)
+	void remove(const string &path)
 	{
-
+		if (std::remove(path.c_str()) != 0) { throw std::runtime_error("Unable to remove file: " + path); }
 	}
 
 private:
-	std::string build_path(const std::string &path)
+	string build_path(const string &path)
 	{
 		return default_root_dir + path;
 	}
 
-	std::string discover_default_root_dir()
+	string discover_default_root_dir()
 	{
 		char* root_dir = getenv("APAMA_FILEPLUGIN_ROOT_DIR");
 		if (root_dir) {
@@ -90,7 +103,7 @@ private:
 		return getenv("APAMA_WORK");
 	}
 
-	std::string default_root_dir;
+	string default_root_dir;
 
 };
 
