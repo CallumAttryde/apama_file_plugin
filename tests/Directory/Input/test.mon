@@ -1,0 +1,31 @@
+monitor test
+{
+	import "FilePlugin" as fp;
+
+	action onload()
+	{
+		string entry;
+		sequence<string> entries := fp.ls("");
+		if (entries.size() = 0) {
+			log "Directory should have entries" at ERROR;
+		}
+		for entry in entries {
+			log entry;
+		}
+
+		fp.mkdir("my_new_dir");
+		entries := fp.ls("");
+		if (entries.indexOf("my_new_dir") = -1) {
+			log "my_new_dir not found in current directory" at ERROR;
+		}
+
+
+		entries := fp.ls("my_new_dir");
+		if (entries.size() != 0) {
+			log "Directory should not have entries" at ERROR;
+		}
+		fp.rmdir("my_new_dir");
+
+		log "Test finished";
+	}
+}

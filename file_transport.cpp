@@ -92,17 +92,17 @@ public:
 
 	void remove(const string &path)
 	{
-		if (std::remove(build_path(path).c_str()) != 0) { throw std::runtime_error("Unable to remove file: " + path); }
+		if (std::remove(build_path(path).c_str()) != 0) { throw std::runtime_error("Unable to remove file: " + build_path(path)); }
 	}
 
 	void make_dir(const string &path)
 	{
-		if (mkdir(build_path(path).c_str(), 0777) != 0) { throw std::runtime_error("Unable to make directory: " + path); }
+		if (mkdir(build_path(path).c_str(), 0777) != 0) { throw std::runtime_error("Unable to make directory: " + build_path(path)); }
 	}
 
 	void remove_dir(const string &path)
 	{
-		if (rmdir(build_path(path).c_str()) != 0) { throw std::runtime_error("Unable to remove directory: " + path); }
+		if (rmdir(build_path(path).c_str()) != 0) { throw std::runtime_error("Unable to remove directory: " + build_path(path)); }
 	}
 
 	list_t list_dir(const string &path)
@@ -110,8 +110,11 @@ public:
 		list_t entries;
 		DIR *dir;
 		struct dirent *ent;
+		
+		if ((dir = opendir(build_path(path).c_str())) == nullptr) { throw std::runtime_error("Could not find directory: " + build_path(path)); }
 		while ((ent = readdir(dir)) != nullptr)
 		{
+			if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) { continue; }
 			entries.push_back(ent->d_name);
 		}
 		closedir(dir);
