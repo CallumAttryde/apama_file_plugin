@@ -1,0 +1,37 @@
+using com.apama.exceptions.Exception;
+
+monitor test
+{
+	import "FilePlugin" as fp;
+
+	constant string missing := "missing_file.out";
+
+	action onload()
+	{
+		try {
+			sequence<string> contents := fp.read(missing);
+		} catch (Exception e) {
+			log e.getMessage();
+		}
+
+		try {
+			float file_size := fp.get_file_size_MB(missing);
+		} catch (Exception e) {
+			log e.getMessage();
+		}
+
+		try {
+			fp.copy(missing, "new_dir");
+		} catch (Exception e) {
+			log e.getMessage();
+		}
+
+		try {
+			fp.remove(missing);
+		} catch (Exception e) {
+			log e.getMessage();
+		}
+		
+		log "Test finished";
+	}
+}

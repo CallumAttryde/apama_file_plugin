@@ -38,7 +38,7 @@ public:
 		md.registerMethod<decltype(&FileTransport::exists), &FileTransport::exists>("exists", "action<string> returns boolean");
 		md.registerMethod<decltype(&FileTransport::copy), &FileTransport::copy>("copy", "action<string, string>");
 		md.registerMethod<decltype(&FileTransport::move), &FileTransport::move>("move", "action<string, string>");
-		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string, string>");
+		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string>");
 		md.registerMethod<decltype(&FileTransport::make_dir), &FileTransport::make_dir>("mkdir", "action<string>");
 		md.registerMethod<decltype(&FileTransport::remove_dir), &FileTransport::remove_dir>("rmdir", "action<string>");
 		md.registerMethod<decltype(&FileTransport::list_dir), &FileTransport::list_dir>("ls", "action<string> returns sequence<string>");

@@ -31,6 +31,8 @@ monitor test
 
 		fp.copy(file_1, file_2);
 
+		fp.remove(file_1);
+
 		fp.move(file_2, file_3);
 		if (fp.exists(file_2)) {
 			log "File exists after move" at ERROR;
