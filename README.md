@@ -1,3 +1,3 @@
 # Apama FilePlugin
 
-A C++ based EPL Plugin for interacting with the filesystem from Apama. Linux only at present
+Apama EPL Plugin for interacting with the filesystem from within Apama. Linux only at present
