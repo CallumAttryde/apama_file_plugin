@@ -18,6 +18,11 @@ monitor test
 			log "File does not exist after creation" at ERROR;
 		}
 
+		float file_1_size := fp.get_file_size_MB(file_1);
+		if (file_1_size <= 0.0) {
+			log "File size is too small" at ERROR;
+		}
+
 		string line;
 		for line in fp.read(file_1)
 		{
@@ -34,6 +39,11 @@ monitor test
 		for line in fp.read(file_3)
 		{
 			log line;
+		}
+
+		float file_3_size := fp.get_file_size_MB(file_3);
+		if (file_3_size != file_1_size) {
+			log "File size mismatch" at ERROR;
 		}
 
 		log "Test finished";

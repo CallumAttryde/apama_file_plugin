@@ -42,6 +42,7 @@ public:
 		md.registerMethod<decltype(&FileTransport::make_dir), &FileTransport::make_dir>("mkdir", "action<string>");
 		md.registerMethod<decltype(&FileTransport::remove_dir), &FileTransport::remove_dir>("rmdir", "action<string>");
 		md.registerMethod<decltype(&FileTransport::list_dir), &FileTransport::list_dir>("ls", "action<string> returns sequence<string>");
+		md.registerMethod<decltype(&FileTransport::get_file_size_MB), &FileTransport::get_file_size_MB>("get_file_size_MB", "action<string> returns float");
 	}
 
 	string get_root_dir() { return root_dir; }
@@ -49,10 +50,8 @@ public:
 	list_t read(const string &path)
 	{
 		list_t contents;
-		ifstream ifs;
-		ifs.open(build_path(path));
-		for(string line; std::getline(ifs, line);)
-		{
+		ifstream ifs(build_path(path));
+		for(string line; std::getline(ifs, line);) {
 			contents.push_back(line);
 		}
 		return contents;
@@ -60,10 +59,8 @@ public:
 
 	void write(const string &path, const list_t &contents)
 	{
-		std::ofstream ofs;
-		ofs.open(build_path(path));
-		for(auto it = contents.begin(); it != contents.end(); ++it)
-		{
+		std::ofstream ofs(build_path(path));
+		for(auto it = contents.begin(); it != contents.end(); ++it) {
 			ofs << get<const char*>(*it) << std::endl;
 		}
 	}
@@ -71,16 +68,14 @@ public:
 	bool exists(const string &path)
 	{
 		struct stat buffer;
-		return (stat (path.c_str(), &buffer) == 0);
+		return (stat (build_path(path).c_str(), &buffer) == 0);
 	}
 
 	void copy(const string &path, const string &target)
 	{
-		ifstream source(path, std::ios::binary);
-		ofstream dest(target, std::ios::binary);
+		ifstream source(build_path(path), std::ios::binary);
+		ofstream dest(build_path(target), std::ios::binary);
 		dest << source.rdbuf();
-		source.close();
-		dest.close();
 	}
 
 	// should this be atomic?
@@ -122,19 +117,28 @@ public:
 		return entries;
 	}
 
+	double get_file_size_MB(const string &path)
+	{
+		ifstream ifs(build_path(path), std::ios::binary | std::ios::ate);
+		return ifs.tellg() / (1024.0 * 1024.0);
+	}
+
 private:
 	string build_path(const string &path)
 	{
-		return root_dir + '/' + path;
+		return root_dir + path;
 	}
 
 	string discover_root_dir()
 	{
-		char* root_dir = getenv("APAMA_FILEPLUGIN_ROOT_DIR");
+		char *root_dir = getenv("APAMA_FILEPLUGIN_ROOT_DIR");
+		string ret;
 		if (root_dir) {
-			return root_dir;
+			ret = root_dir;
+		} else {
+			ret = getenv("APAMA_WORK");
 		}
-		return getenv("APAMA_WORK");
+		return ret + "/";
 	}
 
 	string root_dir;
