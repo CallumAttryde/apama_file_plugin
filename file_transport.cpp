@@ -6,7 +6,10 @@
 #include <fstream>
 #include <cstdio>
 #include <iostream>
+
 #include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
 
 #include <epl_plugin.hpp>
 
@@ -36,6 +39,9 @@ public:
 		md.registerMethod<decltype(&FileTransport::copy), &FileTransport::copy>("copy", "action<string, string>");
 		md.registerMethod<decltype(&FileTransport::move), &FileTransport::move>("move", "action<string, string>");
 		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string, string>");
+		md.registerMethod<decltype(&FileTransport::make_dir), &FileTransport::make_dir>("mkdir", "action<string>");
+		md.registerMethod<decltype(&FileTransport::remove_dir), &FileTransport::remove_dir>("rmdir", "action<string>");
+		md.registerMethod<decltype(&FileTransport::list_dir), &FileTransport::list_dir>("ls", "action<string> returns sequence<string>");
 	}
 
 	string get_root_dir() { return root_dir; }
@@ -87,6 +93,30 @@ public:
 	void remove(const string &path)
 	{
 		if (std::remove(build_path(path).c_str()) != 0) { throw std::runtime_error("Unable to remove file: " + path); }
+	}
+
+	void make_dir(const string &path)
+	{
+		if (mkdir(build_path(path).c_str(), 0777) != 0) { throw std::runtime_error("Unable to make directory: " + path); }
+	}
+
+	void remove_dir(const string &path)
+	{
+		if (rmdir(build_path(path).c_str()) != 0) { throw std::runtime_error("Unable to remove directory: " + path); }
+	}
+
+	list_t list_dir(const string &path)
+	{
+		list_t entries;
+		DIR *dir;
+		struct dirent *ent;
+		while ((ent = readdir(dir)) != nullptr)
+		{
+			entries.push_back(ent->d_name);
+		}
+		closedir(dir);
+
+		return entries;
 	}
 
 private:
