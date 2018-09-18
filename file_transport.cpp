@@ -49,6 +49,7 @@ public:
 
 	list_t read(const string &path)
 	{
+		check_exists(path);
 		list_t contents;
 		ifstream ifs(build_path(path));
 		for(string line; std::getline(ifs, line);) {
@@ -73,6 +74,7 @@ public:
 
 	void copy(const string &path, const string &target)
 	{
+		check_exists(path);
 		ifstream source(build_path(path), std::ios::binary);
 		ofstream dest(build_path(target), std::ios::binary);
 		dest << source.rdbuf();
@@ -119,11 +121,17 @@ public:
 
 	double get_file_size_MB(const string &path)
 	{
+		check_exists(path);
 		ifstream ifs(build_path(path), std::ios::binary | std::ios::ate);
 		return ifs.tellg() / (1024.0 * 1024.0);
 	}
 
 private:
+	void check_exists(const string &path)
+	{
+		if (!exists(path)) { throw std::runtime_error("Could not find: " + build_path(path)); }
+	}
+
 	string build_path(const string &path)
 	{
 		return root_dir + path;
