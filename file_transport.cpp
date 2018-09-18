@@ -23,7 +23,7 @@ class FileTransport : public EPLPlugin<FileTransport>
 {
 public:
 	FileTransport() 
-		: base_plugin_t("FileTransportPlugin"), default_root_dir(discover_default_root_dir())
+		: base_plugin_t("FilePluginPlugin"), default_root_dir(discover_default_root_dir())
 	{}
 	~FileTransport() {}
 
@@ -31,8 +31,8 @@ public:
 	{
 		md.registerMethod<decltype(&FileTransport::get_default_root_dir), &FileTransport::get_default_root_dir>("get_default_root_dir", "action<> returns string");
 		md.registerMethod<decltype(&FileTransport::read), &FileTransport::read>("read", "action<string> returns sequence<string>");
-		md.registerMethod<decltype(&FileTransport::write), &FileTransport::write>("write", "action<string, sequence<string>");
-		md.registerMethod<decltype(&FileTransport::exists), &FileTransport::exists>("exists", "action<string> returns bool");
+		md.registerMethod<decltype(&FileTransport::write), &FileTransport::write>("write", "action<string, sequence<string> >");
+		md.registerMethod<decltype(&FileTransport::exists), &FileTransport::exists>("exists", "action<string> returns boolean");
 		md.registerMethod<decltype(&FileTransport::copy), &FileTransport::copy>("copy", "action<string, string>");
 		md.registerMethod<decltype(&FileTransport::move), &FileTransport::move>("move", "action<string, string>");
 		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string, string>");
@@ -77,7 +77,8 @@ public:
 		dest.close();
 	}
 
-	void move(const string &path, const string target)
+	// should this be atomic?
+	void move(const string &path, const string &target)
 	{
 		copy(path, target);
 		remove(path);
@@ -85,13 +86,13 @@ public:
 
 	void remove(const string &path)
 	{
-		if (std::remove(path.c_str()) != 0) { throw std::runtime_error("Unable to remove file: " + path); }
+		if (std::remove(build_path(path).c_str()) != 0) { throw std::runtime_error("Unable to remove file: " + path); }
 	}
 
 private:
 	string build_path(const string &path)
 	{
-		return default_root_dir + path;
+		return default_root_dir + '/' + path;
 	}
 
 	string discover_default_root_dir()
