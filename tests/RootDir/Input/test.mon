@@ -1,0 +1,10 @@
+monitor test
+{
+	import "FilePlugin" as fp;
+
+	action onload()
+	{
+		log fp.get_root_dir();
+		log "Test finished";
+	}
+}

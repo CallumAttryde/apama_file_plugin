@@ -23,13 +23,13 @@ class FileTransport : public EPLPlugin<FileTransport>
 {
 public:
 	FileTransport() 
-		: base_plugin_t("FilePluginPlugin"), default_root_dir(discover_default_root_dir())
+		: base_plugin_t("FilePluginPlugin"), root_dir(discover_root_dir())
 	{}
 	~FileTransport() {}
 
 	static void initialize(base_plugin_t::method_data_t &md)
 	{
-		md.registerMethod<decltype(&FileTransport::get_default_root_dir), &FileTransport::get_default_root_dir>("get_default_root_dir", "action<> returns string");
+		md.registerMethod<decltype(&FileTransport::get_root_dir), &FileTransport::get_root_dir>("get_root_dir", "action<> returns string");
 		md.registerMethod<decltype(&FileTransport::read), &FileTransport::read>("read", "action<string> returns sequence<string>");
 		md.registerMethod<decltype(&FileTransport::write), &FileTransport::write>("write", "action<string, sequence<string> >");
 		md.registerMethod<decltype(&FileTransport::exists), &FileTransport::exists>("exists", "action<string> returns boolean");
@@ -38,7 +38,7 @@ public:
 		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string, string>");
 	}
 
-	string get_default_root_dir() { return default_root_dir; }
+	string get_root_dir() { return root_dir; }
 
 	list_t read(const string &path)
 	{
@@ -92,10 +92,10 @@ public:
 private:
 	string build_path(const string &path)
 	{
-		return default_root_dir + '/' + path;
+		return root_dir + '/' + path;
 	}
 
-	string discover_default_root_dir()
+	string discover_root_dir()
 	{
 		char* root_dir = getenv("APAMA_FILEPLUGIN_ROOT_DIR");
 		if (root_dir) {
@@ -104,7 +104,7 @@ private:
 		return getenv("APAMA_WORK");
 	}
 
-	string default_root_dir;
+	string root_dir;
 
 };
 
