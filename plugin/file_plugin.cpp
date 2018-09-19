@@ -22,27 +22,27 @@ using std::ifstream;
 using std::ofstream;
 using std::string;
 
-class FileTransport : public EPLPlugin<FileTransport>
+class FilePlugin : public EPLPlugin<FilePlugin>
 {
 public:
-	FileTransport() 
+	FilePlugin() 
 		: base_plugin_t("FilePluginPlugin"), root_dir(discover_root_dir())
 	{}
-	~FileTransport() {}
+	~FilePlugin() {}
 
 	static void initialize(base_plugin_t::method_data_t &md)
 	{
-		md.registerMethod<decltype(&FileTransport::get_root_dir), &FileTransport::get_root_dir>("get_root_dir", "action<> returns string");
-		md.registerMethod<decltype(&FileTransport::read), &FileTransport::read>("read", "action<string> returns sequence<string>");
-		md.registerMethod<decltype(&FileTransport::write), &FileTransport::write>("write", "action<string, sequence<string> >");
-		md.registerMethod<decltype(&FileTransport::exists), &FileTransport::exists>("exists", "action<string> returns boolean");
-		md.registerMethod<decltype(&FileTransport::copy), &FileTransport::copy>("copy", "action<string, string>");
-		md.registerMethod<decltype(&FileTransport::move), &FileTransport::move>("move", "action<string, string>");
-		md.registerMethod<decltype(&FileTransport::remove), &FileTransport::remove>("remove", "action<string>");
-		md.registerMethod<decltype(&FileTransport::make_dir), &FileTransport::make_dir>("mkdir", "action<string>");
-		md.registerMethod<decltype(&FileTransport::remove_dir), &FileTransport::remove_dir>("rmdir", "action<string>");
-		md.registerMethod<decltype(&FileTransport::list_dir), &FileTransport::list_dir>("ls", "action<string> returns sequence<string>");
-		md.registerMethod<decltype(&FileTransport::get_file_size_MB), &FileTransport::get_file_size_MB>("get_file_size_MB", "action<string> returns float");
+		md.registerMethod<decltype(&FilePlugin::get_root_dir), &FilePlugin::get_root_dir>("get_root_dir", "action<> returns string");
+		md.registerMethod<decltype(&FilePlugin::read), &FilePlugin::read>("read", "action<string> returns sequence<string>");
+		md.registerMethod<decltype(&FilePlugin::write), &FilePlugin::write>("write", "action<string, sequence<string> >");
+		md.registerMethod<decltype(&FilePlugin::exists), &FilePlugin::exists>("exists", "action<string> returns boolean");
+		md.registerMethod<decltype(&FilePlugin::copy), &FilePlugin::copy>("copy", "action<string, string>");
+		md.registerMethod<decltype(&FilePlugin::move), &FilePlugin::move>("move", "action<string, string>");
+		md.registerMethod<decltype(&FilePlugin::remove), &FilePlugin::remove>("remove", "action<string>");
+		md.registerMethod<decltype(&FilePlugin::make_dir), &FilePlugin::make_dir>("mkdir", "action<string>");
+		md.registerMethod<decltype(&FilePlugin::remove_dir), &FilePlugin::remove_dir>("rmdir", "action<string>");
+		md.registerMethod<decltype(&FilePlugin::list_dir), &FilePlugin::list_dir>("ls", "action<string> returns sequence<string>");
+		md.registerMethod<decltype(&FilePlugin::get_file_size_MB), &FilePlugin::get_file_size_MB>("get_file_size_MB", "action<string> returns float");
 	}
 
 	string get_root_dir() { return root_dir; }
@@ -153,7 +153,7 @@ private:
 
 };
 
-APAMA_DECLARE_EPL_PLUGIN(FileTransport)
+APAMA_DECLARE_EPL_PLUGIN(FilePlugin)
 
 #endif
 

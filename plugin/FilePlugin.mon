@@ -1,5 +1,8 @@
 package com.apamax.plugins;
 
+/**
+ * Provides an interface to the filesystem
+ */
 event Filesystem
 {
 	import "FilePlugin" as fp;

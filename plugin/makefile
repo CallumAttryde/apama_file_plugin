@@ -19,7 +19,7 @@ OBJDIR := ./obj
 
 # List each of the C++ source files
 FILEPLUGIN_SRC_CPP := \
-	file_transport.cpp
+	file_plugin.cpp
 
 FILEPLUGIN_OBJ := FilePlugin
 FILEPLUGIN_DEP := $(patsubst %.cpp, %.d, $(FILEPLUGIN_SRC_CPP))

@@ -1,11 +1,11 @@
 FROM kpalf/apamacore:10.2.0.2_ubuntu_amd64 as builder
-COPY . ${APAMA_WORK}/apama_file_transport
+COPY . ${APAMA_WORK}/apama_file_plugin
 RUN apt-get update && apt-get install -y g++-4.8 make python
-RUN cd ${APAMA_WORK}/apama_file_transport/plugin; make && make install
+RUN cd ${APAMA_WORK}/apama_file_plugin/plugin; make && make install
 ENV \ 
 	PYTHONPATH=${APAMA_HOME}/third_party/python/lib/python2.7/site-packages \
 	LD_LIBRARY_PATH=${APAMA_WORK}/lib:${LD_LIBRARY_PATH}
-RUN cd ${APAMA_WORK}/apama_file_transport/tests; pysys run | tee logfile && grep 'THERE WERE NO NON PASSES' logfile
+RUN cd ${APAMA_WORK}/apama_file_plugin/tests; pysys run | tee logfile && grep 'THERE WERE NO NON PASSES' logfile
 
 FROM kpalf/apamacore:10.2.0.2_ubuntu_amd64
 ENV \ 
