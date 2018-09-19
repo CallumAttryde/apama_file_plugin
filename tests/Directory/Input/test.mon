@@ -1,11 +1,11 @@
+using com.apamax.plugins.Filesystem;
+
 monitor test
 {
-	import "FilePlugin" as fp;
-
 	action onload()
 	{
 		string entry;
-		sequence<string> entries := fp.ls("");
+		sequence<string> entries := Filesystem.ls("");
 		if (entries.size() = 0) {
 			log "Directory should have entries" at ERROR;
 		}
@@ -13,18 +13,18 @@ monitor test
 			log entry;
 		}
 
-		fp.mkdir("my_new_dir");
-		entries := fp.ls("");
+		Filesystem.mkdir("my_new_dir");
+		entries := Filesystem.ls("");
 		if (entries.indexOf("my_new_dir") = -1) {
 			log "my_new_dir not found in current directory" at ERROR;
 		}
 
 
-		entries := fp.ls("my_new_dir");
+		entries := Filesystem.ls("my_new_dir");
 		if (entries.size() != 0) {
 			log "Directory should not have entries" at ERROR;
 		}
-		fp.rmdir("my_new_dir");
+		Filesystem.rmdir("my_new_dir");
 
 		log "Test finished";
 	}

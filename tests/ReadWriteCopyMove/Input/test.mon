@@ -1,49 +1,49 @@
+using com.apamax.plugins.Filesystem;
+
 monitor test
 {
-	import "FilePlugin" as fp;
-
 	constant string file_1 := "myfile_1.out";
 	constant string file_2 := "myfile_2.out";
 	constant string file_3 := "myfile_3.out";
 
 	action onload()
 	{
-		if (fp.exists(file_1)) {
+		if (Filesystem.exists(file_1)) {
 			log "File exists at start of test" at ERROR;
 		}
 
 		sequence<string> lines := ["first line in my file", "second line in my file"];
-		fp.write(file_1, lines);
-		if not (fp.exists(file_1)) {
+		Filesystem.write(file_1, lines);
+		if not (Filesystem.exists(file_1)) {
 			log "File does not exist after creation" at ERROR;
 		}
 
-		float file_1_size := fp.get_file_size_MB(file_1);
+		float file_1_size := Filesystem.du_MB(file_1);
 		if (file_1_size <= 0.0) {
 			log "File size is too small" at ERROR;
 		}
 
 		string line;
-		for line in fp.read(file_1)
+		for line in Filesystem.read(file_1)
 		{
 			log line;
 		}
 
-		fp.copy(file_1, file_2);
+		Filesystem.cp(file_1, file_2);
 
-		fp.remove(file_1);
+		Filesystem.rm(file_1);
 
-		fp.move(file_2, file_3);
-		if (fp.exists(file_2)) {
+		Filesystem.mv(file_2, file_3);
+		if (Filesystem.exists(file_2)) {
 			log "File exists after move" at ERROR;
 		}
 
-		for line in fp.read(file_3)
+		for line in Filesystem.read(file_3)
 		{
 			log line;
 		}
 
-		float file_3_size := fp.get_file_size_MB(file_3);
+		float file_3_size := Filesystem.du_MB(file_3);
 		if (file_3_size != file_1_size) {
 			log "File size mismatch" at ERROR;
 		}

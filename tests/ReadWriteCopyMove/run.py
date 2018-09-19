@@ -6,6 +6,7 @@ class PySysTest(BaseTest):
 	def execute(self):
             self.correlator = CorrelatorHelper(self)
             self.correlator.start(environ={'APAMA_FILEPLUGIN_ROOT_DIR':self.output})
+            self.correlator.injectEPL(filenames=['FilePlugin.mon'], filedir=PROJECT.APAMA_WORK + '/monitors')
             self.correlator.injectMonitorscript(filenames=['test.mon'])
             self.waitForSignal('correlator.out', expr='Test finished', errorExpr=[' (ERROR|FATAL) '])
 
