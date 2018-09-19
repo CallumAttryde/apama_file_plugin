@@ -5,5 +5,5 @@ language: cpp
 serivces:
         - docker
 
-before_install:
+script:
         - docker build -t apama_file_plugin .
