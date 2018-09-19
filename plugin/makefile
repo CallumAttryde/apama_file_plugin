@@ -8,7 +8,7 @@ $(error APAMA_WORK is not defined)
 endif
 
 # C++ compiler
-CXX := /usr/bin/g++ 
+CXX := /usr/bin/g++-4.8 
 DEFINES := -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
 CXXFLAGS := -std=c++11 -w -fPIC $(DEFINES)
 INCLUDES := "-I$(APAMA_HOME)/include"

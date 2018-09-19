@@ -1,7 +1,6 @@
 FROM kpalf/apamacore:10.2.0.2_ubuntu_amd64 as builder
 COPY . ${APAMA_WORK}/apama_file_transport
 RUN apt-get update && apt-get install -y g++-4.8 make python
-RUN ls '/usr/bin/'
 RUN cd ${APAMA_WORK}/apama_file_transport/plugin; make && make install
 ENV \ 
 	PYTHONPATH=${APAMA_HOME}/third_party/python/lib/python2.7/site-packages \
