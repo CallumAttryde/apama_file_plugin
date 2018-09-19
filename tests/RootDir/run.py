@@ -2,6 +2,7 @@ from pysys.constants import *
 from apama.correlator import CorrelatorHelper
 from pysys.basetest import BaseTest
 
+
 class PySysTest(BaseTest):
 	def execute(self):
             self.correlator_default = CorrelatorHelper(self, name='correlator_default')
@@ -9,6 +10,9 @@ class PySysTest(BaseTest):
 
             self.correlator_default.start()
             self.correlator_tailored.start(environ={'APAMA_FILEPLUGIN_ROOT_DIR':self.output})
+
+            self.correlator_default.injectEPL(filenames=['FilePlugin.mon'], filedir=PROJECT.APAMA_WORK + '/monitors')
+            self.correlator_tailored.injectEPL(filenames=['FilePlugin.mon'], filedir=PROJECT.APAMA_WORK + '/monitors')
 
             self.correlator_default.injectMonitorscript(filenames=['test.mon'])
             self.correlator_tailored.injectMonitorscript(filenames=['test.mon'])

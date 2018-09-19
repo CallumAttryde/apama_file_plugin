@@ -21,7 +21,7 @@ event Filesystem
 	 * @parameter path The file to search for.
 	 * @returns True if the file exists, false otherwise.
 	 */
-	static action exists(string path) returns bool
+	static action exists(string path) returns boolean
 	{
 		return fp.exists(path);
 	}
@@ -93,7 +93,7 @@ event Filesystem
 	 */
 	static action mkdir(string path)
 	{
-		fp.make_dir(path);
+		fp.mkdir(path);
 	}
 
 	/**
@@ -104,7 +104,7 @@ event Filesystem
 	 */
 	static action rmdir(string path)
 	{
-		fp.remove_dir(path);
+		fp.rmdir(path);
 	}
 
 	/**
@@ -116,7 +116,7 @@ event Filesystem
 	 */
 	static action ls(string path) returns sequence<string>
 	{
-		return fp.list_dir(path);
+		return fp.ls(path);
 	}
 
 	/**
@@ -126,7 +126,7 @@ event Filesystem
 	 * @parameter path The file to examine.
 	 * @returns The size of the file in megabytes.
 	 */
-	static action du_MB(string path) returns double
+	static action du_MB(string path) returns float
 	{
 		return fp.get_file_size_MB(path);
 	}

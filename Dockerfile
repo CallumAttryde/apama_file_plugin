@@ -12,4 +12,5 @@ ENV \
 	PYTHONPATH=${APAMA_HOME}/third_party/python/lib/python2.7/site-packages \
 	LD_LIBRARY_PATH=${APAMA_WORK}/lib:${LD_LIBRARY_PATH}
 COPY --from=builder ${APAMA_WORK}/lib ${APAMA_WORK}/lib
+COPY --from=builder ${APAMA_WORK}/monitors ${APAMA_WORK}/monitors
 

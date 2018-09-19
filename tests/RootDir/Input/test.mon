@@ -1,10 +1,10 @@
+using com.apamax.plugins.Filesystem;
+
 monitor test
 {
-	import "FilePlugin" as fp;
-
 	action onload()
 	{
-		log fp.get_root_dir();
+		log Filesystem.getRootDir();
 		log "Test finished";
 	}
 }

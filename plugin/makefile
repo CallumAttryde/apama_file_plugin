@@ -38,6 +38,8 @@ $(BINDIR)/libFilePlugin.so: $(OBJDIR)/$(FILEPLUGIN_OBJ)
 install:
 	mkdir -p $(APAMA_WORK)/lib
 	cp $(BINDIR)/*.so $(APAMA_WORK)/lib
+	mkdir -p $(APAMA_WORK)/monitors
+	cp *.mon $(APAMA_WORK)/monitors
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
