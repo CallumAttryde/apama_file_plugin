@@ -1,0 +1,9 @@
+sudo: required
+
+language: cpp
+
+serivces:
+        - docker
+
+before_install:
+        - docker build -t apama_file_plugin .
