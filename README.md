@@ -1,4 +1,4 @@
-# Apama FilePlugin
+# Apama FilePlugin [![Build Status](https://travis-ci.org/CallumAttryde/apama_file_transport.svg?branch=master)](https://travis-ci.org/CallumAttryde/apama_file_transport)
 
 Apama EPL Plugin for interacting with the filesystem from within Apama. Linux only at present
 
