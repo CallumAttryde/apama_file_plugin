@@ -1,4 +1,4 @@
-serivces:
+services:
         - docker
 
 script:
