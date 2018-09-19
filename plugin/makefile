@@ -36,8 +36,8 @@ $(BINDIR)/libFilePlugin.so: $(OBJDIR)/$(FILEPLUGIN_OBJ)
 	$(CXX) -o $@ $(OBJDIR)/$(FILEPLUGIN_OBJ) $(LDFLAGS)
 
 install:
-	mkdir -p $(APAMA_HOME)/lib
-	cp $(BINDIR)/*.so $(APAMA_HOME)/lib
+	mkdir -p $(APAMA_WORK)/lib
+	cp $(BINDIR)/*.so $(APAMA_WORK)/lib
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
