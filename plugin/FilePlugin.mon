@@ -1,0 +1,133 @@
+package com.apamax.plugins;
+
+event Filesystem
+{
+	import "FilePlugin" as fp;
+
+	/**
+	 * Get the root directory from which file path parameters to other functions are relative to.
+	 * This can be modified at start time using the APAMA_FILEPLUGIN_ROOT_DIR environment variable.
+	 *
+	 * @returns The root directory which this plugin searches from.
+	 */
+	static action getRootDir() returns string 
+	{
+		return fp.get_root_dir();
+	}
+
+	/**
+	 * Check whether a file exists or not.
+	 *
+	 * @parameter path The file to search for.
+	 * @returns True if the file exists, false otherwise.
+	 */
+	static action exists(string path) returns bool
+	{
+		return fp.exists(path);
+	}
+
+	/**
+	 * Read a file line by line.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The file to read.
+	 * @returns Linebuffered file contents.
+	 */
+	static action read(string path) returns sequence<string>
+	{
+		return fp.read(path);
+	}
+
+	/**
+	 * Write a file line by line.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The file to write.
+	 * @parameter contents The lines to write.
+	 */
+	static action write(string path, sequence<string> contents)
+	{
+		fp.write(path, contents);
+	}
+
+	/**
+	 * Copy a file.
+	 * Throws an exception upon failure.
+	 * 
+	 * @paremeter path The file to copy from.
+	 * @parameter target The file to copy to.
+	 */
+	static action cp(string path, string target)
+	{
+		fp.copy(path, target);
+	}
+
+	/**
+	 * Move a file.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The file to move from.
+	 * @parameter target The file to move to.
+	 */
+	static action mv(string path, string target)
+	{
+		fp.move(path, target);
+	}
+
+	/**
+	 * Remove a file.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The file to remove.
+	 */
+	static action rm(string path)
+	{
+		fp.remove(path);
+	}
+
+	/**
+	 * Create a directory.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The directory to create.
+	 */
+	static action mkdir(string path)
+	{
+		fp.make_dir(path);
+	}
+
+	/**
+	 * Remove a directory.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The directory to remove.
+	 */
+	static action rmdir(string path)
+	{
+		fp.remove_dir(path);
+	}
+
+	/**
+	 * List all elements inside a directory.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The directory to search.
+	 * @returns A sequence of elements inside the directory.
+	 */
+	static action ls(string path) returns sequence<string>
+	{
+		return fp.list_dir(path);
+	}
+
+	/**
+	 * Get the size of a file in megabytes.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter path The file to examine.
+	 * @returns The size of the file in megabytes.
+	 */
+	static action du_MB(string path) returns double
+	{
+		return fp.get_file_size_MB(path);
+	}
+}
