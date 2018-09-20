@@ -60,7 +60,12 @@ public:
 
 	void write(const string &path, const list_t &contents)
 	{
-		std::ofstream ofs(build_path(path));
+		std::ofstream ofs;
+		if (exists(path)) {
+			ofs.open(build_path(path), std::ios_base::app);
+		} else {
+			ofs.open(build_path(path));
+		}
 		for(auto it = contents.begin(); it != contents.end(); ++it) {
 			ofs << get<const char*>(*it) << std::endl;
 		}
