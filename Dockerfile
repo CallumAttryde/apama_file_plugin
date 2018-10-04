@@ -1,7 +1,7 @@
 FROM kpalf/apamacore:10.2.0.2_ubuntu_amd64 as builder
 COPY . ${APAMA_WORK}/apama_file_plugin
-RUN apt-get update && apt-get install -y g++-4.8 make python && alias c++='g++-4.8'
-RUN cd ${APAMA_WORK}/apama_file_plugin/plugin; make && make install
+RUN apt-get update && apt-get install -y g++-4.8 make python
+RUN alias c++='g++-4.8' && cd ${APAMA_WORK}/apama_file_plugin/plugin; make && make install
 ENV \ 
 	PYTHONPATH=${APAMA_HOME}/third_party/python/lib/python2.7/site-packages \
 	LD_LIBRARY_PATH=${APAMA_WORK}/lib:${LD_LIBRARY_PATH}
