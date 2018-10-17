@@ -100,17 +100,6 @@ event Filesystem
 	}
 
 	/**
-	 * Remove a directory.
-	 * Throws an exception upon failure.
-	 *
-	 * @parameter path The directory to remove.
-	 */
-	static action rmdir(string path)
-	{
-		fp.rmdir(path);
-	}
-
-	/**
 	 * List all elements inside a directory.
 	 * Throws an exception upon failure.
 	 *

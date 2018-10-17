@@ -6,7 +6,7 @@
 #include <fstream>
 #include <cstdio>
 #include <iostream>
-#include <filesystem>
+#include <experimental/filesystem>
 
 #include <sys/stat.h>
 #include <unistd.h>
@@ -29,7 +29,7 @@ class FilePlugin : public EPLPlugin<FilePlugin>
 {
 public:
 	FilePlugin() 
-		: base_plugin_t("FilePluginPlugin"), root_dir(discover_root_dir())
+		: base_plugin_t("FilePluginPlugin"), root_dir(discover_root_dir()), last_ec()
 	{}
 	~FilePlugin() {}
 
@@ -51,7 +51,9 @@ public:
 
 	list_t read(const string &path)
 	{
-		check_exists(path);
+		if (!exists(path)) {
+			throw fs::filesystem_error("cannot read", build_path(path), last_ec);
+		}
 		list_t contents;
 		ifstream ifs(build_path(path));
 		for(string line; std::getline(ifs, line);) {
@@ -75,7 +77,7 @@ public:
 
 	bool exists(const string &path)
 	{
-		return fs::exists(build_path(path));
+		return fs::exists(build_path(path), last_ec);
 	}
 
 	void copy(const string &path, const string &target)
@@ -92,12 +94,14 @@ public:
 
 	void remove(const string &path)
 	{
-		if (fs::remove(build_path(path)) != 0) { throw std::runtime_error("Unable to remove file: " + build_path(path)); }
+		if (!fs::remove(build_path(path))) {
+			throw fs::filesystem_error("cannot remove", build_path(path), last_ec);
+		}
 	}
 
 	void make_dir(const string &path)
 	{
-		if (fs::create_directory(build_path(path)) != 0) { throw std::runtime_error("Unable to make directory: " + build_path(path)); }
+		fs::create_directory(build_path(path));
 	}
 
 	list_t list_dir(const string &path)
@@ -112,16 +116,10 @@ public:
 
 	double get_file_size_MB(const string &path)
 	{
-		check_exists(path);
 		return fs::file_size(build_path(path));
 	}
 
 private:
-	void check_exists(const string &path)
-	{
-		if (!fs::exists(path)) { throw std::runtime_error("Could not find: " + build_path(path)); }
-	}
-
 	fs::path build_path(const string &path)
 	{
 		return root_dir + path;
@@ -139,6 +137,7 @@ private:
 		return ret + "/";
 	}
 
+	std::error_code last_ec;
 	string root_dir;
 };
 

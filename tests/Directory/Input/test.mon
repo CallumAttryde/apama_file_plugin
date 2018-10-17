@@ -4,28 +4,35 @@ monitor test
 {
 	action onload()
 	{
-		string entry;
 		sequence<string> entries := Filesystem.ls("");
+		print_entries(entries);
 		if (entries.size() = 0) {
 			log "Directory should have entries" at ERROR;
-		}
-		for entry in entries {
-			log entry;
 		}
 
 		Filesystem.mkdir("my_new_dir");
 		entries := Filesystem.ls("");
-		if (entries.indexOf("my_new_dir") = -1) {
+		// print_entries(entries);
+		if (entries.indexOf(Filesystem.getRootDir() + "my_new_dir") = -1) {
 			log "my_new_dir not found in current directory" at ERROR;
 		}
 
-
 		entries := Filesystem.ls("my_new_dir");
+		// print_entries(entries);
 		if (entries.size() != 0) {
 			log "Directory should not have entries" at ERROR;
 		}
-		Filesystem.rmdir("my_new_dir");
+		Filesystem.rm("my_new_dir");
 
+		// print_entries(entries);
 		log "Test finished";
+	}
+
+	action print_entries(sequence<string> entries)
+	{
+		string entry;
+		for entry in entries {
+			log entry;
+		}
 	}
 }
