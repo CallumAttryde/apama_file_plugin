@@ -10,9 +10,9 @@ endif
 # C++ compiler
 CXX := /usr/bin/c++
 DEFINES := -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS
-CXXFLAGS := -std=c++11 -w -fPIC $(DEFINES)
+CXXFLAGS := -std=c++14 -w -fPIC $(DEFINES)
 INCLUDES := "-I$(APAMA_HOME)/include"
-LDFLAGS := -shared -L"$(APAMA_HOME)/lib"
+LDFLAGS := -shared -L"$(APAMA_HOME)/lib" -lstdc++fs
 
 BINDIR := ./bin
 OBJDIR := ./obj

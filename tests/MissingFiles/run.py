@@ -12,7 +12,7 @@ class PySysTest(BaseTest):
 
 	def validate(self):
 		self.assertGrep('correlator.out', expr=' (ERROR|FATAL) ', contains=False)
-		self.assertGrep('correlator.out', expr='Could not find.*missing.*in plugin method read')
-		self.assertGrep('correlator.out', expr='Could not find.*missing.*in plugin method get_file_size_MB')
-		self.assertGrep('correlator.out', expr='Could not find.*missing.*in plugin method copy') 
-		self.assertGrep('correlator.out', expr='Unable to remove file.*missing.*in plugin method remove')
+		self.assertGrep('correlator.out', expr='cannot read.*missing_file.out.*in plugin method read')
+		self.assertGrep('correlator.out', expr='cannot get file size.*missing_file.out.*in plugin method get_file_size_MB')
+		self.assertGrep('correlator.out', expr='cannot copy.*missing_file.out.*in plugin method copy') 
+		self.assertGrep('correlator.out', expr='cannot remove.*missing_file.out.*in plugin method remove')
