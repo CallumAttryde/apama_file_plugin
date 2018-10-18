@@ -52,8 +52,8 @@ Link(libname('${APAMA_WORK}/lib/FilePlugin'),
 			'$(APAMA_HOME)/lib'
 		],
 		libs=[
-			'apclient',
 			'stdc++fs'
 		],
 		shared=True)
 
+Copy('${APAMA_WORK}/monitors/FilePlugin.mon', 'plugin/FilePlugin.mon')
