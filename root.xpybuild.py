@@ -25,7 +25,6 @@ from propertysupport import *
 from buildcommon import *
 from pathsets import *
 
-from targets.zip import Zip
 from targets.copy import Copy
 from targets.custom import CustomCommand
 from targets.native import Cpp, Link, objectname, libname
@@ -36,14 +35,13 @@ from utils.compilers import GCC, VisualStudio
 requireXpyBuildVersion('1.12')
 
 defineOutputDirProperty('OUTPUT_DIR', 'release-output')
-definePropertiesFromFile('release.properties')
 definePathProperty('APAMA_HOME', os.getenv('APAMA_HOME', None), mustExist=True)
 definePathProperty('APAMA_WORK', os.getenv('APAMA_WORK', None), mustExist=True)
 
 setGlobalOption('native.compilers', GCC())
 setGlobalOption('native.cxx.flags', ['-fPIC', '-O3', '--std=c++14'])
 
-Cpp(objectname('${BUILD_WORK_DIR}/FilePlugin'), '../plugin/file_plugin.cpp',
+Cpp(objectname('${BUILD_WORK_DIR}/FilePlugin'), 'plugin/file_plugin.cpp',
 	includes=[
 		'${APAMA_HOME}/include',
 	])
