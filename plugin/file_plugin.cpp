@@ -8,10 +8,6 @@
 #include <iostream>
 #include <experimental/filesystem>
 
-#include <sys/stat.h>
-#include <unistd.h>
-#include <dirent.h>
-
 #include <epl_plugin.hpp>
 
 using com::apama::epl::EPLPlugin;
@@ -109,7 +105,8 @@ public:
 		list_t entries;
 		for (const auto &dir_ent : fs::directory_iterator(build_path(path)))
 		{
-			entries.push_back(dir_ent.path().c_str());
+			// ambiguity on windows - find a nicer fix
+			entries.push_back(std::move(data_t(dir_ent.path().c_str())));
 		}
 		return entries;
 	}

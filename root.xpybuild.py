@@ -1,26 +1,3 @@
-# xpyBuild - eXtensible Python-based Build System
-#
-# Copyright (c) 2013 - 2018 Software AG, Darmstadt, Germany and/or its licensors
-# Copyright (c) 2013 - 2018 Ben Spiller and Matthew Johnson
-#
-#   Licensed under the Apache License, Version 2.0 (the "License");
-#   you may not use this file except in compliance with the License.
-#   You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#   Unless required by applicable law or agreed to in writing, software
-#   distributed under the License is distributed on an "AS IS" BASIS,
-#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#   See the License for the specific language governing permissions and
-#   limitations under the License.
-#
-# $Id: root.xpybuild.py 301527 2017-02-06 15:31:43Z matj $
-# Requires: Python 2.7
-
-
-# xpybuild release build file. Creates pydoc API docs and versioned zip file for releases.
-
 from propertysupport import *
 from buildcommon import *
 from pathsets import *
@@ -38,22 +15,33 @@ defineOutputDirProperty('OUTPUT_DIR', 'release-output')
 definePathProperty('APAMA_HOME', os.getenv('APAMA_HOME', None), mustExist=True)
 definePathProperty('APAMA_WORK', os.getenv('APAMA_WORK', None), mustExist=True)
 
-setGlobalOption('native.compilers', GCC())
-setGlobalOption('native.cxx.flags', ['-fPIC', '-O3', '--std=c++14'])
+if isWindows():
+	VSROOT=r'c:\Program Files (x86)\Microsoft Visual Studio 14.0'
+	assert os.path.exists(VSROOT), 'Cannot find Visual Studio installed in: %s'%VSROOT
+	setGlobalOption('native.compilers', VisualStudio(VSROOT+r'\VC\bin\amd64'))
+	setGlobalOption('native.include', [r"%s\VC\ATLMFC\INCLUDE" % VSROOT, r"%s\VC\INCLUDE" % VSROOT, r"C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt"])
+	setGlobalOption('native.libpaths', [r"%s\VC\ATLMFC\LIB\amd64" % VSROOT, r"%s\VC\LIB\amd64" % VSROOT, r"C:\Program Files (x86)\Windows Kits\10\Lib\10.0.10240.0\ucrt\x64", r"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x64"])
+	setGlobalOption('native.cxx.flags', ['/EHa', '/GR', '/O2', '/Ox', '/Ot', '/MD', '/nologo'])
+else:
+	setGlobalOption('native.compilers', GCC())
+	setGlobalOption('native.cxx.flags', ['-fPIC', '-O3', '--std=c++14'])
 
 Cpp(objectname('${BUILD_WORK_DIR}/FilePlugin'), 'plugin/file_plugin.cpp',
 	includes=[
 		'${APAMA_HOME}/include',
 	])
 
+# really we only want stdc++fs if using GCC, fix later
+platform_libs = [] if isWindows() else ['stdc++fs']
+
 Link(libname('${APAMA_WORK}/lib/FilePlugin'),
 		[objectname('${BUILD_WORK_DIR}/FilePlugin')],
 		libpaths=[
-			'$(APAMA_HOME)/lib'
+			'${APAMA_HOME}/lib'
 		],
 		libs=[
-			'stdc++fs'
-		],
+			'apclient',
+		] + platform_libs,
 		shared=True)
 
 Copy('${APAMA_WORK}/monitors/FilePlugin.mon', 'plugin/FilePlugin.mon')
