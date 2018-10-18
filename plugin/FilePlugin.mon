@@ -122,4 +122,16 @@ event Filesystem
 	{
 		return fp.get_file_size_MB(path);
 	}
+
+	/**
+	 * Build a path composed of subpath names, automatically inserting the correct separator.
+	 * Throws an exception upon failure.
+	 *
+	 * @parameter paths The set of paths to compose
+	 * @returns The composed path.
+	 */
+	static action build_path(sequence<string> paths) returns string
+	{
+		return fp.build_path(paths);
+	}
 }

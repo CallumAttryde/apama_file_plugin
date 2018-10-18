@@ -5,15 +5,18 @@ monitor test
 	action onload()
 	{
 		sequence<string> entries := Filesystem.ls("");
-		print_entries(entries);
+
+		// print_entries(entries);
 		if (entries.size() = 0) {
 			log "Directory should have entries" at ERROR;
 		}
 
 		Filesystem.mkdir("my_new_dir");
 		entries := Filesystem.ls("");
-		// print_entries(entries);
-		if (entries.indexOf(Filesystem.getRootDir() + "my_new_dir") = -1) {
+		print_entries(entries);
+
+		string expected := Filesystem.build_path([Filesystem.getRootDir(), "my_new_dir"]);
+		if (entries.indexOf(expected) = -1) {
 			log "my_new_dir not found in current directory" at ERROR;
 		}
 
@@ -32,7 +35,7 @@ monitor test
 	{
 		string entry;
 		for entry in entries {
-			log entry;
+			log entry at CRIT;
 		}
 	}
 }

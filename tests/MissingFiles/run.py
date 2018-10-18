@@ -12,7 +12,8 @@ class PySysTest(BaseTest):
 
 	def validate(self):
 		self.assertGrep('correlator.out', expr=' (ERROR|FATAL) ', contains=False)
-		self.assertGrep('correlator.out', expr='cannot read.*missing_file.out.*in plugin method read')
-		self.assertGrep('correlator.out', expr='cannot get file size.*missing_file.out.*in plugin method get_file_size_MB')
-		self.assertGrep('correlator.out', expr='cannot copy.*missing_file.out.*in plugin method copy') 
-		self.assertGrep('correlator.out', expr='cannot remove.*missing_file.out.*in plugin method remove')
+		# non standard exception messages means we can't succinctly check for specifics
+		self.assertGrep('correlator.out', expr='in plugin method read')
+		self.assertGrep('correlator.out', expr='in plugin method get_file_size_MB')
+		self.assertGrep('correlator.out', expr='in plugin method copy') 
+		self.assertGrep('correlator.out', expr='in plugin method remove')
