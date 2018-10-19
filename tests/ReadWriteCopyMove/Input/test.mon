@@ -18,7 +18,7 @@ monitor test
 			log "File does not exist after creation" at ERROR;
 		}
 
-		float file_1_size := Filesystem.du_MB(file_1);
+		float file_1_size := Filesystem.du_KB(file_1);
 		if (file_1_size <= 0.0) {
 			log "File size is too small" at ERROR;
 		}
@@ -43,7 +43,7 @@ monitor test
 			log line;
 		}
 
-		float file_3_size := Filesystem.du_MB(file_3);
+		float file_3_size := Filesystem.du_KB(file_3);
 		if (file_3_size != file_1_size) {
 			log "File size mismatch" at ERROR;
 		}

@@ -112,15 +112,15 @@ event Filesystem
 	}
 
 	/**
-	 * Get the size of a file in megabytes.
+	 * Get the size of a file in kilobytes.
 	 * Throws an exception upon failure.
 	 *
 	 * @parameter path The file to examine.
-	 * @returns The size of the file in megabytes.
+	 * @returns The size of the file in kilobytes.
 	 */
-	static action du_MB(string path) returns float
+	static action du_KB(string path) returns float
 	{
-		return fp.get_file_size_MB(path);
+		return fp.get_file_size_KB(path);
 	}
 
 	/**

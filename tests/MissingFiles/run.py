@@ -14,6 +14,6 @@ class PySysTest(BaseTest):
 		self.assertGrep('correlator.out', expr=' (ERROR|FATAL) ', contains=False)
 		# non standard exception messages means we can't succinctly check for specifics
 		self.assertGrep('correlator.out', expr='in plugin method read')
-		self.assertGrep('correlator.out', expr='in plugin method get_file_size_MB')
+		self.assertGrep('correlator.out', expr='in plugin method get_file_size_KB')
 		self.assertGrep('correlator.out', expr='in plugin method copy') 
 		self.assertGrep('correlator.out', expr='in plugin method remove')

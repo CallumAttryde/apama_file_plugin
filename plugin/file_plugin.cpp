@@ -40,7 +40,7 @@ public:
 		md.registerMethod<decltype(&FilePlugin::remove), &FilePlugin::remove>("remove", "action<string>");
 		md.registerMethod<decltype(&FilePlugin::make_dir), &FilePlugin::make_dir>("mkdir", "action<string>");
 		md.registerMethod<decltype(&FilePlugin::list_dir), &FilePlugin::list_dir>("ls", "action<string> returns sequence<string>");
-		md.registerMethod<decltype(&FilePlugin::get_file_size_MB), &FilePlugin::get_file_size_MB>("get_file_size_MB", "action<string> returns float");
+		md.registerMethod<decltype(&FilePlugin::get_file_size_KB), &FilePlugin::get_file_size_KB>("get_file_size_KB", "action<string> returns float");
 		md.registerMethod<decltype(&FilePlugin::build_path), &FilePlugin::build_path>("build_path", "action<sequence<string> > returns string");
 	}
 
@@ -110,9 +110,9 @@ public:
 		return entries;
 	}
 
-	double get_file_size_MB(const string &path)
+	double get_file_size_KB(const string &path)
 	{
-		return fs::file_size(append_path(path));
+		return fs::file_size(append_path(path)) / 1024.0;
 	}
 
 	string build_path(const list_t &paths)
