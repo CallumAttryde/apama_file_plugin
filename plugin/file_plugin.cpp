@@ -8,10 +8,6 @@
 #include <iostream>
 #include <experimental/filesystem>
 
-#include <sys/stat.h>
-#include <unistd.h>
-#include <dirent.h>
-
 #include <epl_plugin.hpp>
 
 using com::apama::epl::EPLPlugin;
@@ -44,18 +40,19 @@ public:
 		md.registerMethod<decltype(&FilePlugin::remove), &FilePlugin::remove>("remove", "action<string>");
 		md.registerMethod<decltype(&FilePlugin::make_dir), &FilePlugin::make_dir>("mkdir", "action<string>");
 		md.registerMethod<decltype(&FilePlugin::list_dir), &FilePlugin::list_dir>("ls", "action<string> returns sequence<string>");
-		md.registerMethod<decltype(&FilePlugin::get_file_size_MB), &FilePlugin::get_file_size_MB>("get_file_size_MB", "action<string> returns float");
+		md.registerMethod<decltype(&FilePlugin::get_file_size_KB), &FilePlugin::get_file_size_KB>("get_file_size_KB", "action<string> returns float");
+		md.registerMethod<decltype(&FilePlugin::build_path), &FilePlugin::build_path>("build_path", "action<sequence<string> > returns string");
 	}
 
-	string get_root_dir() { return root_dir; }
+	string get_root_dir() { return root_dir.string(); }
 
 	list_t read(const string &path)
 	{
 		if (!exists(path)) {
-			throw fs::filesystem_error("cannot read", build_path(path), last_ec);
+			throw fs::filesystem_error("cannot read", append_path(path), last_ec);
 		}
 		list_t contents;
-		ifstream ifs(build_path(path));
+		ifstream ifs(append_path(path));
 		for(string line; std::getline(ifs, line);) {
 			contents.push_back(line);
 		}
@@ -66,23 +63,23 @@ public:
 	{
 		std::ofstream ofs;
 		if (exists(path)) {
-			ofs.open(build_path(path), std::ios_base::app);
+			ofs.open(append_path(path), std::ios_base::app);
 		} else {
-			ofs.open(build_path(path));
+			ofs.open(append_path(path));
 		}
-		for(auto it = contents.begin(); it != contents.end(); ++it) {
+		for (auto it = contents.begin(); it != contents.end(); ++it) {
 			ofs << get<const char*>(*it) << std::endl;
 		}
 	}
 
 	bool exists(const string &path)
 	{
-		return fs::exists(build_path(path), last_ec);
+		return fs::exists(append_path(path), last_ec);
 	}
 
 	void copy(const string &path, const string &target)
 	{
-		fs::copy(build_path(path), build_path(target));
+		fs::copy(append_path(path), append_path(target));
 	}
 
 	// should this be atomic?
@@ -94,51 +91,59 @@ public:
 
 	void remove(const string &path)
 	{
-		if (!fs::remove(build_path(path))) {
-			throw fs::filesystem_error("cannot remove", build_path(path), last_ec);
+		if (!fs::remove(append_path(path))) {
+			throw fs::filesystem_error("cannot remove", append_path(path), last_ec);
 		}
 	}
 
 	void make_dir(const string &path)
 	{
-		fs::create_directory(build_path(path));
+		fs::create_directory(append_path(path));
 	}
 
 	list_t list_dir(const string &path)
 	{
 		list_t entries;
-		for (const auto &dir_ent : fs::directory_iterator(build_path(path)))
-		{
-			entries.push_back(dir_ent.path().c_str());
+		for (const auto &dir_ent : fs::directory_iterator(append_path(path))) {
+			entries.push_back(dir_ent.path().string());
 		}
 		return entries;
 	}
 
-	double get_file_size_MB(const string &path)
+	double get_file_size_KB(const string &path)
 	{
-		return fs::file_size(build_path(path));
+		return fs::file_size(append_path(path)) / 1024.0;
+	}
+
+	string build_path(const list_t &paths)
+	{
+		fs::path ret;
+		for (auto it = paths.begin(); it != paths.end(); ++it) {
+			ret /= get<const char*>(*it);
+		}
+		return ret.string();
 	}
 
 private:
-	fs::path build_path(const string &path)
+	fs::path append_path(const string &path)
 	{
-		return root_dir + path;
+		return root_dir / path;
 	}
 
-	string discover_root_dir()
+	fs::path discover_root_dir()
 	{
-		char *root_dir = getenv("APAMA_FILEPLUGIN_ROOT_DIR");
+		char *root = getenv("APAMA_FILEPLUGIN_ROOT_DIR");
 		string ret;
-		if (root_dir) {
-			ret = root_dir;
+		if (root) {
+			ret = root;
 		} else {
 			ret = getenv("APAMA_WORK");
 		}
-		return ret + "/";
+		return ret;
 	}
 
 	std::error_code last_ec;
-	string root_dir;
+	fs::path root_dir;
 };
 
 APAMA_DECLARE_EPL_PLUGIN(FilePlugin)

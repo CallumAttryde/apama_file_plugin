@@ -14,7 +14,7 @@ monitor test
 		}
 
 		try {
-			float file_size := Filesystem.du_MB(missing);
+			float file_size := Filesystem.du_KB(missing);
 		} catch (Exception e) {
 			log e.getMessage();
 		}

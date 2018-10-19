@@ -2,7 +2,6 @@ from pysys.constants import *
 from apama.correlator import CorrelatorHelper
 from pysys.basetest import BaseTest
 
-
 class PySysTest(BaseTest):
 	def execute(self):
 		self.correlator_default = CorrelatorHelper(self, name='correlator_default')
@@ -21,5 +20,5 @@ class PySysTest(BaseTest):
 		self.waitForSignal('correlator_tailored.out', expr='Test finished')
 
 	def validate(self):
-		self.assertGrep('correlator_default.out', expr=self.project.APAMA_WORK)
-		self.assertGrep('correlator_tailored.out', expr=self.output)
+		self.assertGrep('correlator_default.out', expr=self.project.APAMA_WORK, literal=True)
+		self.assertGrep('correlator_tailored.out', expr=self.output, literal=True)

@@ -1,0 +1,3 @@
+[submodule "xpybuild"]
+	path = xpybuild
+	url = https://github.com/xpybuild/xpybuild
