@@ -2,7 +2,8 @@ FROM kpalf/apamacore:10.3.0.1_nanoserver_amd64_1803 as builder
 COPY . ${APAMA_WORK}/apama_file_plugin
 # USER root
 # xpybuild is python2 but pysys is python3, argh!
-RUN choco.exe install git python2 python
+RUN apt-get update
+RUN choco install git python2 python
 RUN cd ${APAMA_WORK}/apama_file_plugin && git submodule init && git submodule update
 RUN cd ${APAMA_WORK}/apama_file_plugin && python2 xpybuild/xpybuild.py;
 RUN cd ${APAMA_WORK}/apama_file_plugin/tests; pysys run | tee logfile && grep 'THERE WERE NO NON PASSES' logfile
