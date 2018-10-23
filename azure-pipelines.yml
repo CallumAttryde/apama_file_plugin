@@ -3,12 +3,18 @@
 # Add steps that use Docker Compose, tag images, push to a registry, run an image, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-pool:
-  vmImage: 'Ubuntu 16.04'
 
 variables:
   imageName: 'apama_file_plugin:$(build.buildId)'
 
-steps:
-- script: docker build -f Dockerfile -t $(imageName) .
-  displayName: 'docker build'
+jobs:
+- job: lin
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script docker build -f Dockerfile -t $(imageName) .
+- job: win
+  pool:
+    vmImage: 'win1803'
+  steps:
+  - script docker build -f Dockerfile -t $(imageName) .
