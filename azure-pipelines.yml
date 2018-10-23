@@ -12,9 +12,9 @@ jobs:
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
-  - script: docker build -f Dockerfile -t $(imageName) .
+  - script: docker build -f Dockerfile.lin -t $(imageName) .
 - job: win
   pool:
     vmImage: 'win1803'
   steps:
-  - script: docker build -f Dockerfile -t $(imageName) .
+  - script: docker build -f Dockerfile.win -t $(imageName) .
