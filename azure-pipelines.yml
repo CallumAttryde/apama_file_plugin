@@ -1,0 +1,21 @@
+# Docker image
+# Build a Docker image to deploy, run, or push to a container registry.
+# Add steps that use Docker Compose, tag images, push to a registry, run an image, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+
+variables:
+  imageName: 'apama_file_plugin:$(build.buildId)'
+
+jobs:
+- job: lin
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: docker build -f Dockerfile.lin -t $(imageName) .
+- job: win
+  pool:
+    vmImage: 'win1803'
+  steps:
+  - script: "%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+  - script: docker build -f Dockerfile.win -t $(imageName) .
